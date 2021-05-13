@@ -1,13 +1,20 @@
 const Discord = require('discord.js'); //discord'u çekiyoruz.
 const client = new Discord.Client(); //client alıyoruz.
+const ayarlar = require("./ayarlar.json")//ayarları çekiyoruz
 
-client.on('ready', () => { //Bot hazırsa 
-  console.log('   BOT Hazır'); //Konsola bot hazır yazdır
-  const guild = client.guilds.cache.get("Sunucu id'si") //Burada client.guilds.cache.get yerine client.guilds.get deneyebilirsiniz.
-  //Yaptığımız işlem sunucunun id'sini çekiyor ve guild'e yazdırıyor.
-  client.user.setActivity(`Toplam Üyeler: ${guild.memberCount} Kişi!`);//Burada ise botun oynuyor kısmına yazı yazıyoruz.
-  //guild.memberCount kısmındaki guild'i üstteki kısımdan yazdırmıştık
-  //memberCount ise sunucudaki kişi sayısını belirtiyor eğer sadece memberCount yazarsanız hata verir çünkü açıklamada oynuyor kısmında bot sunucunun id'sini çekemez.
+client.on('ready', () => {
+    console.log(`   ++_bot aktif!_++`); //logluyoruz
+    const guild = client.guilds.cache.get("Sunucu id");// burada hangi sunucunun bilgilerini çekiceksek onu giriyoruz
+    client.user.setActivity(`Sunucudaki ${guild.memberCount} kişiyi`,{type:"WATCHING"});//burada ise botun oynuyor kısmı ayarlanıyor guild.membercount sunucudaki kişi sayısı oluyor.
 });
 
-client.login('Tokeniniz')//Burada hangi botun çalıştırıcağını ayarlayıbalirsiniz
+client.on('guildMemberAdd', member =>{//sunucuya birisi girerse updatelenecek!
+    const guild = client.guilds.cache.get("Sunucu id");
+    client.user.setActivity(`Sunucudaki ${guild.memberCount} kişiyi`,{type:"WATCHING"});
+});
+client.on('guildMemberRemove', member =>{
+    const guild = client.guilds.cache.get("Sunucu id");//sunucudan birisi çıkarsa updatelenecek!
+    client.user.setActivity(`Sunucudaki ${guild.memberCount} kişiyi`,{type:"WATCHING"});
+});
+
+client.login(ayarlar.token)//Burada hangi botun çalıştırıcağını ayarlıyabalirsiniz
